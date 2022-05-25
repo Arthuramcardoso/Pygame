@@ -17,7 +17,7 @@ altura_inicial_dos_obstaculos = 120
 largura_inicial_dos_obstaculos = 180
 
 velocidade_x_dos_obstaculos = 0
-velocidade_y_dos_obstaculos = 8
+velocidade_y_dos_obstaculos = 2
 
 tela_de_fundo_img = pygame.image.load('recursos/fundo.png').convert()
 tela_de_fundo_img = pygame.transform.scale(tela_de_fundo_img,(largura_da_tela, altura_da_tela))
@@ -31,6 +31,12 @@ carro_do_marcao_img = pygame.transform.scale(carro_do_marcao_img,(largura_inicia
 carro_da_espm_img = pygame.image.load('recursos/imagem_do_carro_da_espm.png').convert_alpha()
 carro_da_espm_img = pygame.transform.scale(carro_da_espm_img,(largura_inicial_dos_obstaculos, altura_inicial_dos_obstaculos))
 
+carro_da_puc_img = pygame.image.load('recursos/imagem_do_carro_da_puc.png').convert_alpha()
+carro_da_puc_img = pygame.transform.scale(carro_da_puc_img, (largura_inicial_dos_obstaculos, altura_inicial_dos_obstaculos))
+
+carro_do_mackenzie_img = pygame.image.load('recursos/imagem_do_carro_do_mackenzie.png').convert_alpha()
+carro_do_mackenzie_img = pygame.transform.scale(carro_do_mackenzie_img, (largura_inicial_dos_obstaculos, altura_inicial_dos_obstaculos))
+
 # ----- Posições e velocidades iniciais
 muito_esquerda = [0, -altura_inicial_dos_obstaculos, velocidade_x_dos_obstaculos, velocidade_y_dos_obstaculos]
 esquerda = [200, -altura_inicial_dos_obstaculos, velocidade_x_dos_obstaculos, velocidade_y_dos_obstaculos]
@@ -38,19 +44,24 @@ meio = [400, -altura_inicial_dos_obstaculos, velocidade_x_dos_obstaculos, veloci
 direita = [600, -altura_inicial_dos_obstaculos, velocidade_x_dos_obstaculos, velocidade_y_dos_obstaculos]
 muito_direita = [800, -altura_inicial_dos_obstaculos, velocidade_x_dos_obstaculos, velocidade_y_dos_obstaculos]
 
+camada1 = -1*altura_inicial_dos_obstaculos
+camada2 = -2*altura_inicial_dos_obstaculos
+camada3 = -3*altura_inicial_dos_obstaculos
+camada4 = -4*altura_inicial_dos_obstaculos
+camada5 = -5*altura_inicial_dos_obstaculos
 
 
 # ----- Inicia estruturas de dados
 # definindo os novos tipos de estruturas
 class Obstaculo(pygame.sprite.Sprite):
-    def __init__(self, img, posição):
+    def __init__(self, img, posição,camada):
         pygame.sprite.Sprite.__init__(self)
 
         self.image = img
         self.rect = self.image.get_rect()
         self.posição = posição
         self.rect.x = posição[0]
-        self.rect.y = posição[1]
+        self.rect.y = camada
         self.speedx = posição[2]
         self.speedy = posição[3]
 
@@ -74,13 +85,15 @@ game = True
 # ----- Ajuste de velocidade
 
 clock = pygame.time.Clock()
-FPS = 20
+FPS = 60
 
 # ----- Criando obstaculos
 
-carro_da_fgv = Obstaculo(carro_da_fgv_img, muito_esquerda)
-carro_do_marcao = Obstaculo(carro_do_marcao_img, meio)
-carro_da_espm = Obstaculo(carro_da_espm_img, muito_direita)
+carro_da_fgv = Obstaculo(carro_da_fgv_img, meio, camada1)
+carro_do_marcao = Obstaculo(carro_do_marcao_img, meio, camada2)
+carro_da_espm = Obstaculo(carro_da_espm_img, meio, camada3)
+carro_da_puc = Obstaculo(carro_da_puc_img, meio, camada4)
+carro_do_mackenzie = Obstaculo(carro_do_mackenzie_img, meio, camada5)
 
 # ===== Loop principal =====
 while game:
@@ -97,6 +110,8 @@ while game:
     carro_da_fgv.update()
     carro_do_marcao.update()
     carro_da_espm.update()
+    carro_da_puc.update()
+    carro_do_mackenzie.update()
 
 
     # ----- Gera saídas
@@ -106,6 +121,8 @@ while game:
     window.blit(carro_da_fgv.image, carro_da_fgv.rect)
     window.blit(carro_da_espm.image, carro_da_espm.rect)
     window.blit(carro_do_marcao.image, carro_do_marcao.rect)
+    window.blit(carro_da_puc.image, carro_da_puc.rect)
+    window.blit(carro_do_mackenzie.image, carro_do_mackenzie.rect)
 
     # ----- Atualiza estado do jogo
     pygame.display.update()  # Mostra o novo frame para o jogador
