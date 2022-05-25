@@ -5,22 +5,25 @@ import pygame
 pygame.init()
 
 # ----- Gera tela principal
-altura_da_tela = 500
-largura_da_tela = 600
+altura_da_tela = 750
+largura_da_tela = 1500
 window = pygame.display.set_mode((largura_da_tela, altura_da_tela))
 pygame.display.set_caption('Jogo')
 
 
 # ----- definição tamanhos das estruturas
 
-altura_inicial_dos_obstaculos = 50
-largura_inicial_dos_obstaculos = 70
+altura_inicial_dos_obstaculos = 160
+largura_inicial_dos_obstaculos = 240
 
 carro_da_fgv_img = pygame.image.load('recursos/imagem_do_carro_da_fgv.png').convert_alpha()
 carro_da_fgv_img = pygame.transform.scale(carro_da_fgv_img, (largura_inicial_dos_obstaculos, altura_inicial_dos_obstaculos))
 
+carro_do_marcão_img = pygame.image.load('recursos/imagem_do_carro_do_marcão.png').convert_alpha()
+carro_do_marcão_img = pygame.transform.scale(carro_do_marcão_img,(largura_inicial_dos_obstaculos, altura_inicial_dos_obstaculos))
+
 # ----- Posições e velocidades iniciais
-esquerda = [200, -altura_inicial_dos_obstaculos,-1.5, 5]
+esquerda = [175, -altura_inicial_dos_obstaculos, 0, 8]
 
 
 # ----- Inicia estruturas de dados
@@ -43,10 +46,11 @@ class Obstaculo(pygame.sprite.Sprite):
         self.rect.y += self.speedy
 
         #atualizando o tamanho
-        self.image = pygame.transform.scale(self.image, (abs(80+self.rect.y*0.25), abs(80+self.rect.y*0.25)))
+        #self.image = pygame.transform.scale(self.image, (abs(180+self.rect.y*0.375), abs(120+self.rect.y*0.25)))
 
         #reiniciando posição
         if self.rect.top > altura_da_tela:
+            #self.image = pygame.transform.scale(self.image,(largura_inicial_dos_obstaculos, altura_inicial_dos_obstaculos))
             self.rect.x = self.posição[0]
             self.rect.y = self.posição[1]
 
