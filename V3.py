@@ -5,8 +5,8 @@ import pygame
 pygame.init()
 
 # ----- Gera tela principal
-altura_da_tela = 750
-largura_da_tela = 1500
+altura_da_tela = 720
+largura_da_tela = 1270
 window = pygame.display.set_mode((largura_da_tela, altura_da_tela))
 pygame.display.set_caption('Jogo')
 
