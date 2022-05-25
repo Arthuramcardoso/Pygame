@@ -36,7 +36,7 @@ muito_esquerda = [0, -altura_inicial_dos_obstaculos, velocidade_x_dos_obstaculos
 esquerda = [200, -altura_inicial_dos_obstaculos, velocidade_x_dos_obstaculos, velocidade_y_dos_obstaculos]
 meio = [400, -altura_inicial_dos_obstaculos, velocidade_x_dos_obstaculos, velocidade_y_dos_obstaculos]
 direita = [600, -altura_inicial_dos_obstaculos, velocidade_x_dos_obstaculos, velocidade_y_dos_obstaculos]
-muito_direita = [800 - largura_inicial_dos_obstaculos, -altura_inicial_dos_obstaculos, velocidade_x_dos_obstaculos, velocidade_y_dos_obstaculos]
+muito_direita = [800, -altura_inicial_dos_obstaculos, velocidade_x_dos_obstaculos, velocidade_y_dos_obstaculos]
 
 
 
@@ -78,9 +78,9 @@ FPS = 20
 
 # ----- Criando obstaculos
 
-carro_da_fgv = Obstaculo(carro_da_fgv_img, esquerda)
+carro_da_fgv = Obstaculo(carro_da_fgv_img, muito_esquerda)
 carro_do_marcao = Obstaculo(carro_do_marcao_img, meio)
-carro_da_espm = Obstaculo(carro_da_espm_img, direita)
+carro_da_espm = Obstaculo(carro_da_espm_img, muito_direita)
 
 # ===== Loop principal =====
 while game:
