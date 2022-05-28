@@ -1,6 +1,7 @@
 # ===== Inicialização =====
 # ----- Importa e inicia pacotes
 import pygame
+import random
 
 pygame.init()
 
@@ -9,6 +10,30 @@ altura_da_tela = 500
 largura_da_tela = 1000
 window = pygame.display.set_mode((largura_da_tela, altura_da_tela))
 pygame.display.set_caption('Jogo')
+
+# ----- funções utilizadas no jogo
+
+camadas = []
+def cria_camadas(n_camada_final):
+    for i in range(1, n_camada_final):
+        camadas.append(-i*altura_inicial_dos_obstaculos)
+    return camadas
+
+
+def cria_etapas1buraco(tamanho_da_etapa):
+    lista_lista_obstaculos = []
+    for i in range(0,tamanho_da_etapa):
+        lista_posições = [muito_esquerda, esquerda, meio, direita, muito_direita]
+        posição_do_buraco = random.choice(lista_posições)
+        lista_posições.remove(posição_do_buraco)
+        lista_obstaculos = []
+        for j in lista_posições:
+            lista_obstaculos.append(Obstaculo(random.choice(lista_das_imagens, j, i)))
+        lista_lista_obstaculos.append(lista_obstaculos)
+    return lista_lista_obstaculos
+
+
+
 
 
 # ----- definição tamanhos e propriedades das estruturas
@@ -37,6 +62,8 @@ carro_da_puc_img = pygame.transform.scale(carro_da_puc_img, (largura_inicial_dos
 carro_do_mackenzie_img = pygame.image.load('recursos/imagem_do_carro_do_mackenzie.png').convert_alpha()
 carro_do_mackenzie_img = pygame.transform.scale(carro_do_mackenzie_img, (largura_inicial_dos_obstaculos, altura_inicial_dos_obstaculos))
 
+lista_das_imagens = [carro_da_fgv_img, carro_do_marcao_img, carro_da_espm_img, carro_da_puc_img, carro_do_mackenzie_img]
+
 # ----- Posições e velocidades iniciais
 muito_esquerda = [0, -altura_inicial_dos_obstaculos, velocidade_x_dos_obstaculos, velocidade_y_dos_obstaculos]
 esquerda = [200, -altura_inicial_dos_obstaculos, velocidade_x_dos_obstaculos, velocidade_y_dos_obstaculos]
@@ -44,12 +71,7 @@ meio = [400, -altura_inicial_dos_obstaculos, velocidade_x_dos_obstaculos, veloci
 direita = [600, -altura_inicial_dos_obstaculos, velocidade_x_dos_obstaculos, velocidade_y_dos_obstaculos]
 muito_direita = [800, -altura_inicial_dos_obstaculos, velocidade_x_dos_obstaculos, velocidade_y_dos_obstaculos]
 
-camada1 = -1*altura_inicial_dos_obstaculos
-camada2 = -2*altura_inicial_dos_obstaculos
-camada3 = -3*altura_inicial_dos_obstaculos
-camada4 = -4*altura_inicial_dos_obstaculos
-camada5 = -5*altura_inicial_dos_obstaculos
-
+cria_camadas(20)
 
 # ----- Inicia estruturas de dados
 # definindo os novos tipos de estruturas
@@ -89,11 +111,13 @@ FPS = 60
 
 # ----- Criando obstaculos
 
-carro_da_fgv = Obstaculo(carro_da_fgv_img, meio, camada1)
-carro_do_marcao = Obstaculo(carro_do_marcao_img, meio, camada2)
-carro_da_espm = Obstaculo(carro_da_espm_img, meio, camada3)
-carro_da_puc = Obstaculo(carro_da_puc_img, meio, camada4)
-carro_do_mackenzie = Obstaculo(carro_do_mackenzie_img, meio, camada5)
+#carro_da_fgv = Obstaculo(carro_da_fgv_img, muito_esquerda, camadas[0])
+#carro_do_marcao = Obstaculo(carro_do_marcao_img, esquerda, camadas[1])
+#carro_da_espm = Obstaculo(carro_da_espm_img, meio, camadas[2])
+#carro_da_puc = Obstaculo(carro_da_puc_img, direita, camadas[3])
+#carro_do_mackenzie = Obstaculo(carro_do_mackenzie_img, muito_direita, camadas[4])
+
+
 
 # ===== Loop principal =====
 while game:
