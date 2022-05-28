@@ -108,6 +108,19 @@ game = True
 
 clock = pygame.time.Clock()
 FPS = 60
+class Personagem(pygame.sprite.Sprite):
+    def _init_(self, img):
+        pygame.sprite.Sprite._init_(self)
+        self.image = img
+        self.rect = self.image.get_rect()
+        self.rect.x = largura_da_tela/2 - largura_do_personagem
+        self.rect.y = altura_da_tela - altura_do_personagem
+        self.speedx = 0
+        self.speedy = 0
+
+    def update (self):
+        self.rect.x +=self.speedx
+        self.rect.y +=self.speedy
 
 # ----- Criando obstaculos
 
