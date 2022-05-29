@@ -15,17 +15,19 @@ pygame.display.set_caption('Jogo')
 
 camadas = []
 def cria_camadas(n_camada_final):
-    for i in range(1, n_camada_final):
+    for i in range(1, n_camada_final*2, 2):
         camadas.append(-i*altura_inicial_dos_obstaculos)
     return camadas
 
 
-def cria_etapas1buraco(tamanho_da_etapa):
+def cria_etapas1buraco(tamanho_da_etapa, qnt_buracos):
     lista_lista_obstaculos = []
-    for i in range(0,tamanho_da_etapa):
+    for i in range(tamanho_da_etapa):
         lista_posições = [muito_esquerda, esquerda, meio, direita, muito_direita]
-        posição_do_buraco = random.choice(lista_posições)
-        lista_posições.remove(posição_do_buraco)
+        lista_obstaculos = []
+        for h in range(qnt_buracos):
+            posição_do_buraco = random.choice(lista_posições)
+            lista_posições.remove(posição_do_buraco)
         lista_obstaculos = []
         for j in lista_posições:
             lista_obstaculos.append(Obstaculo(random.choice(lista_das_imagens, j, i)))
@@ -37,6 +39,9 @@ def cria_etapas1buraco(tamanho_da_etapa):
 
 
 # ----- definição tamanhos e propriedades das estruturas
+
+largura_do_personagem = 120
+altura_do_personagem = 180
 
 altura_inicial_dos_obstaculos = 120
 largura_inicial_dos_obstaculos = 180
@@ -101,13 +106,6 @@ class Obstaculo(pygame.sprite.Sprite):
             self.rect.x = self.posição[0]
             self.rect.y = self.posição[1]
 
-game = True
-
-
-# ----- Ajuste de velocidade
-
-clock = pygame.time.Clock()
-FPS = 60
 class Personagem(pygame.sprite.Sprite):
     def _init_(self, img):
         pygame.sprite.Sprite._init_(self)
@@ -122,13 +120,22 @@ class Personagem(pygame.sprite.Sprite):
         self.rect.x +=self.speedx
         self.rect.y +=self.speedy
 
+game = True
+
+
+# ----- Ajuste de velocidade
+
+clock = pygame.time.Clock()
+FPS = 60
+
+
 # ----- Criando obstaculos
 
-#carro_da_fgv = Obstaculo(carro_da_fgv_img, muito_esquerda, camadas[0])
-#carro_do_marcao = Obstaculo(carro_do_marcao_img, esquerda, camadas[1])
-#carro_da_espm = Obstaculo(carro_da_espm_img, meio, camadas[2])
-#carro_da_puc = Obstaculo(carro_da_puc_img, direita, camadas[3])
-#carro_do_mackenzie = Obstaculo(carro_do_mackenzie_img, muito_direita, camadas[4])
+carro_da_fgv = Obstaculo(carro_da_fgv_img, muito_esquerda, camadas[0])
+carro_do_marcao = Obstaculo(carro_do_marcao_img, esquerda, camadas[1])
+carro_da_espm = Obstaculo(carro_da_espm_img, meio, camadas[2])
+carro_da_puc = Obstaculo(carro_da_puc_img, direita, camadas[3])
+carro_do_mackenzie = Obstaculo(carro_do_mackenzie_img, muito_direita, camadas[4])
 
 
 
