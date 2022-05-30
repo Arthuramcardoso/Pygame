@@ -40,8 +40,8 @@ def cria_etapas1buraco(tamanho_da_etapa, qnt_buracos):
 
 # ----- definição tamanhos e propriedades das estruturas
 
-largura_do_personagem = 120
-altura_do_personagem = 180
+largura_do_personagem = 180
+altura_do_personagem = 120
 
 altura_inicial_dos_obstaculos = 120
 largura_inicial_dos_obstaculos = 180
@@ -51,6 +51,9 @@ velocidade_y_dos_obstaculos = 2
 
 tela_de_fundo_img = pygame.image.load('recursos/fundo.png').convert()
 tela_de_fundo_img = pygame.transform.scale(tela_de_fundo_img,(largura_da_tela, altura_da_tela))
+
+personagem_img = pygame.image.load('recursos/imagem_do_personagem.png').convert_alpha()
+personagem_img = pygame.transform.scale(personagem_img,(largura_do_personagem, altura_do_personagem))
 
 carro_da_fgv_img = pygame.image.load('recursos/imagem_do_carro_da_fgv.png').convert_alpha()
 carro_da_fgv_img = pygame.transform.scale(carro_da_fgv_img, (largura_inicial_dos_obstaculos, altura_inicial_dos_obstaculos))
@@ -107,11 +110,11 @@ class Obstaculo(pygame.sprite.Sprite):
             self.rect.y = self.posição[1]
 
 class Personagem(pygame.sprite.Sprite):
-    def _init_(self, img):
-        pygame.sprite.Sprite._init_(self)
+    def __init__(self, img):
+        pygame.sprite.Sprite.__init__(self)
         self.image = img
         self.rect = self.image.get_rect()
-        self.rect.x = largura_da_tela/2 - largura_do_personagem
+        self.rect.x = 400
         self.rect.y = altura_da_tela - altura_do_personagem
         self.speedx = 0
         self.speedy = 0
@@ -130,6 +133,8 @@ FPS = 60
 
 
 # ----- Criando obstaculos
+
+personagem = Personagem(personagem_img)
 
 carro_da_fgv = Obstaculo(carro_da_fgv_img, muito_esquerda, camadas[0])
 carro_do_marcao = Obstaculo(carro_do_marcao_img, esquerda, camadas[1])
@@ -157,6 +162,8 @@ while game:
     carro_da_puc.update()
     carro_do_mackenzie.update()
 
+    personagem.update()
+
 
     # ----- Gera saídas
     window.fill((255, 255, 255))  # Preenche com a cor branca
@@ -167,6 +174,7 @@ while game:
     window.blit(carro_do_marcao.image, carro_do_marcao.rect)
     window.blit(carro_da_puc.image, carro_da_puc.rect)
     window.blit(carro_do_mackenzie.image, carro_do_mackenzie.rect)
+    window.blit(personagem.image, personagem.rect)
 
     # ----- Atualiza estado do jogo
     pygame.display.update()  # Mostra o novo frame para o jogador
