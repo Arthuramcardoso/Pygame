@@ -15,27 +15,9 @@ pygame.display.set_caption('Jogo')
 
 camadas = []
 def cria_camadas(n_camada_final):
-    for i in range(1, n_camada_final*2, 2):
+    for i in range(1, n_camada_final*3, 3):
         camadas.append(-i*altura_inicial_dos_obstaculos)
     return camadas
-
-
-def cria_etapas1buraco(tamanho_da_etapa, qnt_buracos):
-    lista_lista_obstaculos = []
-    for i in range(tamanho_da_etapa):
-        lista_posições = [muito_esquerda, esquerda, meio, direita, muito_direita]
-        lista_obstaculos = []
-        for h in range(qnt_buracos):
-            posição_do_buraco = random.choice(lista_posições)
-            lista_posições.remove(posição_do_buraco)
-        lista_obstaculos = []
-        for j in lista_posições:
-            lista_obstaculos.append(Obstaculo(random.choice(lista_das_imagens, j, i)))
-        lista_lista_obstaculos.append(lista_obstaculos)
-    return lista_lista_obstaculos
-
-
-
 
 
 # ----- definição tamanhos e propriedades das estruturas
@@ -112,14 +94,17 @@ class Obstaculo(pygame.sprite.Sprite):
 class Personagem(pygame.sprite.Sprite):
     def __init__(self, img):
         pygame.sprite.Sprite.__init__(self)
+        self.xlist = [0,200,400,600,800]
+        self.indice = 2
         self.image = img
         self.rect = self.image.get_rect()
-        self.rect.x = 400
+        self.rect.x = self.xlist[self.indice]
         self.rect.y = altura_da_tela - altura_do_personagem
         self.speedx = 0
         self.speedy = 0
 
     def update (self):
+        #self.rect.x = self.xlist[self.indice]
         self.rect.x +=self.speedx
         self.rect.y +=self.speedy
 
@@ -153,6 +138,23 @@ while game:
         # ----- Verifica consequências
         if event.type == pygame.QUIT:
             game = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                if personagem.indice == 0:
+                    personagem.indice = 0
+                else:
+                    personagem.indice -= 1
+                while personagem.rect.x != personagem.xlist[personagem.indice]:
+                    personagem.speedx = -24
+
+            if event.key == pygame.K_RIGHT:
+                if personagem.indice == 4:
+                    personagem.indice = 4
+                else:
+                    personagem.indice += 1
+                while personagem.rect.x != personagem.xlist[personagem.indice]:
+                    personagem.speedx = 24
+            
 
     # ----- Atualiza estado do jogo
 
