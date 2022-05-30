@@ -108,6 +108,9 @@ class Personagem(pygame.sprite.Sprite):
         self.rect.x +=self.speedx
         self.rect.y +=self.speedy
 
+        if self.speedx != 0 and self.rect.x in self.xlist:
+            self.speedx = 0
+
 game = True
 
 
@@ -144,16 +147,14 @@ while game:
                     personagem.indice = 0
                 else:
                     personagem.indice -= 1
-                while personagem.rect.x != personagem.xlist[personagem.indice]:
-                    personagem.speedx = -24
+                personagem.speedx = -20
 
             if event.key == pygame.K_RIGHT:
                 if personagem.indice == 4:
                     personagem.indice = 4
                 else:
                     personagem.indice += 1
-                while personagem.rect.x != personagem.xlist[personagem.indice]:
-                    personagem.speedx = 24
+                personagem.speedx = 20
             
 
     # ----- Atualiza estado do jogo
