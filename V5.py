@@ -121,8 +121,11 @@ FPS = 60
 
 
 # ----- Criando obstaculos
+todosobstaculos = pygame.sprite.Group()
+sprites = pygame.sprite.Group()
 
 personagem = Personagem(personagem_img)
+sprites.add(personagem)
 
 carro_da_fgv = Obstaculo(carro_da_fgv_img, muito_esquerda, camadas[0])
 carro_do_marcao = Obstaculo(carro_do_marcao_img, esquerda, camadas[1])
@@ -130,6 +133,11 @@ carro_da_espm = Obstaculo(carro_da_espm_img, meio, camadas[2])
 carro_da_puc = Obstaculo(carro_da_puc_img, direita, camadas[3])
 carro_do_mackenzie = Obstaculo(carro_do_mackenzie_img, muito_direita, camadas[4])
 
+listaobstaculos = [carro_da_fgv,carro_do_marcao,carro_da_espm,carro_da_puc,carro_do_mackenzie]
+
+for obstaculo in listaobstaculos:
+    todosobstaculos.add(obstaculo)
+    sprites.add(obstaculo)
 
 
 # ===== Loop principal =====
@@ -147,37 +155,44 @@ while game:
                     personagem.indice = 0
                 else:
                     personagem.indice -= 1
-                personagem.speedx = -20
+                    personagem.speedx = -20
+                
 
             if event.key == pygame.K_RIGHT:
                 if personagem.indice == 4:
                     personagem.indice = 4
                 else:
                     personagem.indice += 1
-                personagem.speedx = 20
+                    personagem.speedx = 20
             
 
     # ----- Atualiza estado do jogo
 
-    carro_da_fgv.update()
-    carro_do_marcao.update()
-    carro_da_espm.update()
-    carro_da_puc.update()
-    carro_do_mackenzie.update()
+    # carro_da_fgv.update()
+    # carro_do_marcao.update()
+    # carro_da_espm.update()
+    # carro_da_puc.update()
+    # carro_do_mackenzie.update()
 
-    personagem.update()
+    # personagem.update()
+    sprites.update()
 
+    # ----- Verifica Colisão
+    hits = pygame.sprite.spritecollide(personagem, todosobstaculos, True)
+    if len(hits) > 0:
+        game = False
 
     # ----- Gera saídas
     window.fill((255, 255, 255))  # Preenche com a cor branca
     window.blit(tela_de_fundo_img,(0,0))
 
-    window.blit(carro_da_fgv.image, carro_da_fgv.rect)
-    window.blit(carro_da_espm.image, carro_da_espm.rect)
-    window.blit(carro_do_marcao.image, carro_do_marcao.rect)
-    window.blit(carro_da_puc.image, carro_da_puc.rect)
-    window.blit(carro_do_mackenzie.image, carro_do_mackenzie.rect)
-    window.blit(personagem.image, personagem.rect)
+    # window.blit(carro_da_fgv.image, carro_da_fgv.rect)
+    # window.blit(carro_da_espm.image, carro_da_espm.rect)
+    # window.blit(carro_do_marcao.image, carro_do_marcao.rect)
+    # window.blit(carro_da_puc.image, carro_da_puc.rect)
+    # window.blit(carro_do_mackenzie.image, carro_do_mackenzie.rect)
+    # window.blit(personagem.image, personagem.rect)
+    sprites.draw(window)
 
     # ----- Atualiza estado do jogo
     pygame.display.update()  # Mostra o novo frame para o jogador
