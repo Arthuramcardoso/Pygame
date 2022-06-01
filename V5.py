@@ -22,8 +22,9 @@ mixer.music.play()
 
 # ----- funções utilizadas no jogo
 
-camadas = []
+
 def cria_camadas(n_camada_final):
+    camadas = []
     for i in range(1, n_camada_final*5, 5):
         camadas.append(-i*altura_inicial_dos_obstaculos)
     return camadas
@@ -43,7 +44,12 @@ def cria_obstaculos(n_buracos, camada):
 
     return lista_obstaculo_criado
 
-    
+def cria_todos_obstaculos(camadas):
+    lista = []
+    numeros_de_buracos = [1,2,3,4]
+    for i in camadas:
+        lista.append(cria_obstaculos(random.choice(numeros_de_buracos), i))
+    return lista
 
 
 
@@ -90,7 +96,7 @@ muito_direita = [800, -altura_inicial_dos_obstaculos, velocidade_x_dos_obstaculo
 
 lista_posições = [muito_esquerda, esquerda, meio, direita, muito_direita]
 
-cria_camadas(20)
+camadas = cria_camadas(40)
 
 # ----- Inicia estruturas de dados
 # definindo os novos tipos de estruturas
@@ -109,16 +115,18 @@ class Obstaculo(pygame.sprite.Sprite):
     def update (self):
         #atualizando posição do obstaculo
         self.rect.x += self.speedx
-        self.rect.y += 1 + int(self.speedy*((tempo_final-tempo_inicial))*0.1)
+        self.rect.y += 2 + int(self.speedy*((tempo_final-tempo_inicial))*0.15)
 
         #atualizando o tamanho
         #self.image = pygame.transform.scale(self.image, (abs(180+self.rect.y*0.375), abs(120+self.rect.y*0.25)))
 
         #reiniciando posição
         if self.rect.top > altura_da_tela:
-            #self.image = pygame.transform.scale(self.image,(largura_inicial_dos_obstaculos, altura_inicial_dos_obstaculos))
-            self.rect.x = self.posição[0]
-            self.rect.y = self.posição[1]
+            todosobstaculos.remove(self)
+            sprites.remove(self)
+        #     #self.image = pygame.transform.scale(self.image,(largura_inicial_dos_obstaculos, altura_inicial_dos_obstaculos))
+        #     self.rect.x = self.posição[0]
+        #     self.rect.y = self.posição[1]
 
 class Personagem(pygame.sprite.Sprite):
     def __init__(self, img):
@@ -158,27 +166,27 @@ sprites = pygame.sprite.Group()
 personagem = Personagem(personagem_img)
 sprites.add(personagem)
 
-carro_da_fgv = Obstaculo(carro_da_fgv_img, muito_esquerda, camadas[0])
-carro_do_marcao = Obstaculo(carro_do_marcao_img, esquerda, camadas[1])
-carro_da_espm = Obstaculo(carro_da_espm_img, meio, camadas[2])
-carro_da_puc = Obstaculo(carro_da_puc_img, direita, camadas[3])
-carro_do_mackenzie = Obstaculo(carro_do_mackenzie_img, muito_direita, camadas[4])
-listaobstaculos = [carro_da_fgv,carro_do_marcao,carro_da_espm,carro_da_puc,carro_do_mackenzie]
+# carro_da_fgv = Obstaculo(carro_da_fgv_img, muito_esquerda, camadas[0])
+# carro_do_marcao = Obstaculo(carro_do_marcao_img, esquerda, camadas[1])
+# carro_da_espm = Obstaculo(carro_da_espm_img, meio, camadas[2])
+# carro_da_puc = Obstaculo(carro_da_puc_img, direita, camadas[3])
+# carro_do_mackenzie = Obstaculo(carro_do_mackenzie_img, muito_direita, camadas[4])
+# listaobstaculos = [carro_da_fgv,carro_do_marcao,carro_da_espm,carro_da_puc,carro_do_mackenzie]
 
-for obstaculo in listaobstaculos:
-    todosobstaculos.add(obstaculo)
-    sprites.add(obstaculo)
+# for obstaculo in listaobstaculos:
+#     todosobstaculos.add(obstaculo)
+#     sprites.add(obstaculo)
 
-# lista_obstaculos_camada1 = cria_obstaculos(2, 1)
-# lista_obstaculos_camada2 = cria_obstaculos(1, 2)
-# lista_obstaculos_camada3 = cria_obstaculos(3, 3)
+# lista_obstaculos_camada1 = cria_obstaculos(2, camadas[0])
+# lista_obstaculos_camada2 = cria_obstaculos(1, camadas[1])
+# lista_obstaculos_camada3 = cria_obstaculos(3, camadas[2])
 
-# lista_lista_obstaculos = [lista_obstaculos_camada1, lista_obstaculos_camada2, lista_obstaculos_camada3]
+lista_lista_obstaculos = cria_todos_obstaculos(camadas)
 
-# for lista in lista_lista_obstaculos:
-#     for obstaculo in lista:
-#         todosobstaculos.add(obstaculo)
-#         sprites.add(obstaculo)
+for lista in lista_lista_obstaculos:
+    for obstaculo in lista:
+        todosobstaculos.add(obstaculo)
+        sprites.add(obstaculo)
 
 # ===== Loop principal =====
 while game:
@@ -208,14 +216,6 @@ while game:
             
   
     # ----- Atualiza estado do jogo
-
-    # carro_da_fgv.update()
-    # carro_do_marcao.update()
-    # carro_da_espm.update()
-    # carro_da_puc.update()
-    # carro_do_mackenzie.update()
-
-    # personagem.update()
     sprites.update()
 
     # ----- Verifica Colisão
@@ -227,12 +227,6 @@ while game:
     window.fill((255, 255, 255))  # Preenche com a cor branca
     window.blit(tela_de_fundo_img,(0,0))
 
-    # window.blit(carro_da_fgv.image, carro_da_fgv.rect)
-    # window.blit(carro_da_espm.image, carro_da_espm.rect)
-    # window.blit(carro_do_marcao.image, carro_do_marcao.rect)
-    # window.blit(carro_da_puc.image, carro_da_puc.rect)
-    # window.blit(carro_do_mackenzie.image, carro_do_mackenzie.rect)
-    # window.blit(personagem.image, personagem.rect)
     sprites.draw(window)
 
     # ----- Atualiza estado do jogo
