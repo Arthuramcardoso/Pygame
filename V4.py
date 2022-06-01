@@ -2,7 +2,6 @@
 # ----- Importa e inicia pacotes
 import pygame
 import random
-import time
 from pygame.locals import *
 from pygame import mixer
 
@@ -14,37 +13,13 @@ largura_da_tela = 1000
 window = pygame.display.set_mode((largura_da_tela, altura_da_tela))
 pygame.display.set_caption('Jogo')
 
-
-# ----- Musica
-mixer.init()
-mixer.music.load('C:\Insper\Dessoft\zap zap.ogg')
-mixer.music.play()
-
 # ----- funções utilizadas no jogo
 
 camadas = []
 def cria_camadas(n_camada_final):
-    for i in range(1, n_camada_final*5, 5):
+    for i in range(1, n_camada_final*3, 3):
         camadas.append(-i*altura_inicial_dos_obstaculos)
     return camadas
-
-def cria_obstaculos(n_buracos, camada):
-    lista_obstaculo_criado = []
-    lista_indices = [0,1,2,3,4]
-    for buraco in range(n_buracos):
-        indice_sorteado = random.choice(lista_indices)
-        lista_indices.remove(indice_sorteado)
-    for obstaculo in lista_indices:
-        imagem_sorteada = random.choice(lista_das_imagens)
-        posição = lista_posições[obstaculo]
-
-        oobstaculo = Obstaculo(imagem_sorteada, posição, camada)
-        lista_obstaculo_criado.append(oobstaculo)
-
-    return lista_obstaculo_criado
-
-    
-
 
 
 # ----- definição tamanhos e propriedades das estruturas
@@ -88,14 +63,12 @@ meio = [400, -altura_inicial_dos_obstaculos, velocidade_x_dos_obstaculos, veloci
 direita = [600, -altura_inicial_dos_obstaculos, velocidade_x_dos_obstaculos, velocidade_y_dos_obstaculos]
 muito_direita = [800, -altura_inicial_dos_obstaculos, velocidade_x_dos_obstaculos, velocidade_y_dos_obstaculos]
 
-lista_posições = [muito_esquerda, esquerda, meio, direita, muito_direita]
-
 cria_camadas(20)
 
 # ----- Inicia estruturas de dados
 # definindo os novos tipos de estruturas
 class Obstaculo(pygame.sprite.Sprite):
-    def __init__(self, img, posição, camada):
+    def __init__(self, img, posição,camada):
         pygame.sprite.Sprite.__init__(self)
 
         self.image = img
@@ -109,7 +82,7 @@ class Obstaculo(pygame.sprite.Sprite):
     def update (self):
         #atualizando posição do obstaculo
         self.rect.x += self.speedx
-        self.rect.y += 1 + int(self.speedy*((tempo_final-tempo_inicial))*0.1)
+        self.rect.y += self.speedy
 
         #atualizando o tamanho
         #self.image = pygame.transform.scale(self.image, (abs(180+self.rect.y*0.375), abs(120+self.rect.y*0.25)))
@@ -137,53 +110,30 @@ class Personagem(pygame.sprite.Sprite):
         self.rect.x +=self.speedx
         self.rect.y +=self.speedy
 
-        if self.speedx != 0 and self.rect.x in self.xlist:
-            self.speedx = 0
-
 game = True
 
 
 # ----- Ajuste de velocidade
-
-tempo_inicial = time.time()
 
 clock = pygame.time.Clock()
 FPS = 60
 
 
 # ----- Criando obstaculos
-todosobstaculos = pygame.sprite.Group()
-sprites = pygame.sprite.Group()
 
 personagem = Personagem(personagem_img)
-sprites.add(personagem)
 
 carro_da_fgv = Obstaculo(carro_da_fgv_img, muito_esquerda, camadas[0])
 carro_do_marcao = Obstaculo(carro_do_marcao_img, esquerda, camadas[1])
 carro_da_espm = Obstaculo(carro_da_espm_img, meio, camadas[2])
 carro_da_puc = Obstaculo(carro_da_puc_img, direita, camadas[3])
 carro_do_mackenzie = Obstaculo(carro_do_mackenzie_img, muito_direita, camadas[4])
-listaobstaculos = [carro_da_fgv,carro_do_marcao,carro_da_espm,carro_da_puc,carro_do_mackenzie]
 
-for obstaculo in listaobstaculos:
-    todosobstaculos.add(obstaculo)
-    sprites.add(obstaculo)
 
-# lista_obstaculos_camada1 = cria_obstaculos(2, 1)
-# lista_obstaculos_camada2 = cria_obstaculos(1, 2)
-# lista_obstaculos_camada3 = cria_obstaculos(3, 3)
-
-# lista_lista_obstaculos = [lista_obstaculos_camada1, lista_obstaculos_camada2, lista_obstaculos_camada3]
-
-# for lista in lista_lista_obstaculos:
-#     for obstaculo in lista:
-#         todosobstaculos.add(obstaculo)
-#         sprites.add(obstaculo)
 
 # ===== Loop principal =====
 while game:
     clock.tick(FPS)
-    tempo_final = time.time()
 
     # ----- Trata eventos
     for event in pygame.event.get():
@@ -196,44 +146,43 @@ while game:
                     personagem.indice = 0
                 else:
                     personagem.indice -= 1
-                    personagem.speedx = -20
-                
+                while personagem.rect.x != personagem.xlist[personagem.indice]:
+                    personagem.speedx = -24
 
             if event.key == pygame.K_RIGHT:
                 if personagem.indice == 4:
                     personagem.indice = 4
                 else:
                     personagem.indice += 1
-                    personagem.speedx = 20
+                while personagem.rect.x != personagem.xlist[personagem.indice]:
+                    personagem.speedx = 24
+    mixer.init()
+    mixer.music.load('C:\Insper\Dessoft\zap zap.ogg')
+    mixer.music.play()
+
             
-  
+
     # ----- Atualiza estado do jogo
 
-    # carro_da_fgv.update()
-    # carro_do_marcao.update()
-    # carro_da_espm.update()
-    # carro_da_puc.update()
-    # carro_do_mackenzie.update()
+    carro_da_fgv.update()
+    carro_do_marcao.update()
+    carro_da_espm.update()
+    carro_da_puc.update()
+    carro_do_mackenzie.update()
 
-    # personagem.update()
-    sprites.update()
+    personagem.update()
 
-    # ----- Verifica Colisão
-    hits = pygame.sprite.spritecollide(personagem, todosobstaculos, True)
-    if len(hits) > 0:
-        game = False
 
     # ----- Gera saídas
     window.fill((255, 255, 255))  # Preenche com a cor branca
     window.blit(tela_de_fundo_img,(0,0))
 
-    # window.blit(carro_da_fgv.image, carro_da_fgv.rect)
-    # window.blit(carro_da_espm.image, carro_da_espm.rect)
-    # window.blit(carro_do_marcao.image, carro_do_marcao.rect)
-    # window.blit(carro_da_puc.image, carro_da_puc.rect)
-    # window.blit(carro_do_mackenzie.image, carro_do_mackenzie.rect)
-    # window.blit(personagem.image, personagem.rect)
-    sprites.draw(window)
+    window.blit(carro_da_fgv.image, carro_da_fgv.rect)
+    window.blit(carro_da_espm.image, carro_da_espm.rect)
+    window.blit(carro_do_marcao.image, carro_do_marcao.rect)
+    window.blit(carro_da_puc.image, carro_da_puc.rect)
+    window.blit(carro_do_mackenzie.image, carro_do_mackenzie.rect)
+    window.blit(personagem.image, personagem.rect)
 
     # ----- Atualiza estado do jogo
     pygame.display.update()  # Mostra o novo frame para o jogador
