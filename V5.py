@@ -17,7 +17,7 @@ pygame.display.set_caption('Jogo')
 
 # ----- Musica
 mixer.init()
-mixer.music.load('C:\Insper\Dessoft\zap zap.ogg')
+mixer.music.load('Recursos/zap zap.ogg')
 mixer.music.play()
 
 # ----- funções utilizadas no jogo
