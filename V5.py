@@ -2,6 +2,7 @@
 # ----- Importa e inicia pacotes
 import pygame
 import random
+import time
 
 pygame.init()
 
@@ -15,7 +16,7 @@ pygame.display.set_caption('Jogo')
 
 camadas = []
 def cria_camadas(n_camada_final):
-    for i in range(1, n_camada_final*3, 3):
+    for i in range(1, n_camada_final*5, 5):
         camadas.append(-i*altura_inicial_dos_obstaculos)
     return camadas
 
@@ -80,7 +81,7 @@ class Obstaculo(pygame.sprite.Sprite):
     def update (self):
         #atualizando posição do obstaculo
         self.rect.x += self.speedx
-        self.rect.y += self.speedy
+        self.rect.y += self.speedy*((tempo_final-tempo_inicial))
 
         #atualizando o tamanho
         #self.image = pygame.transform.scale(self.image, (abs(180+self.rect.y*0.375), abs(120+self.rect.y*0.25)))
@@ -116,6 +117,8 @@ game = True
 
 # ----- Ajuste de velocidade
 
+tempo_inicial = time.time()
+
 clock = pygame.time.Clock()
 FPS = 60
 
@@ -143,6 +146,7 @@ for obstaculo in listaobstaculos:
 # ===== Loop principal =====
 while game:
     clock.tick(FPS)
+    tempo_final = time.time()
 
     # ----- Trata eventos
     for event in pygame.event.get():
