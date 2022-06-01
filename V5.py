@@ -20,6 +20,24 @@ def cria_camadas(n_camada_final):
         camadas.append(-i*altura_inicial_dos_obstaculos)
     return camadas
 
+def cria_obstaculos(n_buracos, camada):
+    lista_obstaculo_criado = []
+    lista_indices = [0,1,2,3,4]
+    for buraco in range(n_buracos):
+        indice_sorteado = random.choice(lista_indices)
+        lista_indices.remove(indice_sorteado)
+    for obstaculo in lista_indices:
+        imagem_sorteada = random.choice(lista_das_imagens)
+        posição = lista_posições[obstaculo]
+
+        oobstaculo = Obstaculo(imagem_sorteada, posição, camada)
+        lista_obstaculo_criado.append(oobstaculo)
+
+    return lista_obstaculo_criado
+
+    
+
+
 
 # ----- definição tamanhos e propriedades das estruturas
 
@@ -62,12 +80,14 @@ meio = [400, -altura_inicial_dos_obstaculos, velocidade_x_dos_obstaculos, veloci
 direita = [600, -altura_inicial_dos_obstaculos, velocidade_x_dos_obstaculos, velocidade_y_dos_obstaculos]
 muito_direita = [800, -altura_inicial_dos_obstaculos, velocidade_x_dos_obstaculos, velocidade_y_dos_obstaculos]
 
+lista_posições = [muito_esquerda, esquerda, meio, direita, muito_direita]
+
 cria_camadas(20)
 
 # ----- Inicia estruturas de dados
 # definindo os novos tipos de estruturas
 class Obstaculo(pygame.sprite.Sprite):
-    def __init__(self, img, posição,camada):
+    def __init__(self, img, posição, camada):
         pygame.sprite.Sprite.__init__(self)
 
         self.image = img
@@ -81,7 +101,7 @@ class Obstaculo(pygame.sprite.Sprite):
     def update (self):
         #atualizando posição do obstaculo
         self.rect.x += self.speedx
-        self.rect.y += self.speedy*((tempo_final-tempo_inicial))
+        self.rect.y += 1 + int(self.speedy*((tempo_final-tempo_inicial))*0.1)
 
         #atualizando o tamanho
         #self.image = pygame.transform.scale(self.image, (abs(180+self.rect.y*0.375), abs(120+self.rect.y*0.25)))
@@ -135,13 +155,22 @@ carro_do_marcao = Obstaculo(carro_do_marcao_img, esquerda, camadas[1])
 carro_da_espm = Obstaculo(carro_da_espm_img, meio, camadas[2])
 carro_da_puc = Obstaculo(carro_da_puc_img, direita, camadas[3])
 carro_do_mackenzie = Obstaculo(carro_do_mackenzie_img, muito_direita, camadas[4])
-
 listaobstaculos = [carro_da_fgv,carro_do_marcao,carro_da_espm,carro_da_puc,carro_do_mackenzie]
 
 for obstaculo in listaobstaculos:
     todosobstaculos.add(obstaculo)
     sprites.add(obstaculo)
 
+# lista_obstaculos_camada1 = cria_obstaculos(2, 1)
+# lista_obstaculos_camada2 = cria_obstaculos(1, 2)
+# lista_obstaculos_camada3 = cria_obstaculos(3, 3)
+
+# lista_lista_obstaculos = [lista_obstaculos_camada1, lista_obstaculos_camada2, lista_obstaculos_camada3]
+
+# for lista in lista_lista_obstaculos:
+#     for obstaculo in lista:
+#         todosobstaculos.add(obstaculo)
+#         sprites.add(obstaculo)
 
 # ===== Loop principal =====
 while game:
