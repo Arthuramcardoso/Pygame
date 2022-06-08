@@ -12,8 +12,8 @@ res=(1000,500)
   
 # opens up a window 
 screen = pygame.display.set_mode(res) 
-tela_de_fundo_menu_img = pygame.image.load('Recursos/capamenu.jpeg').convert()
-tela_de_fundo_menu_img = pygame.transform.scale(tela_de_fundo_img,(largura_da_tela, altura_da_tela))
+tela_de_fundo_menu_img = pygame.image.load('Recursos/capamenu2.jpeg').convert()
+tela_de_fundo_menu_img = pygame.transform.scale(tela_de_fundo_menu_img,(largura_da_tela, altura_da_tela))
   
 # white color 
 color = (255,255,255) 
