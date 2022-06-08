@@ -6,10 +6,14 @@ import sys
 pygame.init() 
   
 # screen resolution 
-res = (1000,500) 
+altura_da_tela = 500
+largura_da_tela = 1000
+res=(1000,500)
   
 # opens up a window 
 screen = pygame.display.set_mode(res) 
+tela_de_fundo_img = pygame.image.load('Recursos/capamenu.jpeg').convert()
+tela_de_fundo_img = pygame.transform.scale(tela_de_fundo_img,(largura_da_tela, altura_da_tela))
   
 # white color 
 color = (255,255,255) 
@@ -22,11 +26,11 @@ color_dark = (100,100,100)
   
 # stores the width of the 
 # screen into a variable 
-width = screen.get_width() 
+width = largura_da_tela 
   
 # stores the height of the 
 # screen into a variable 
-height = screen.get_height() 
+height = altura_da_tela 
   
 # defining a font 
 smallfont = pygame.font.SysFont('Corbel',35) 
@@ -66,7 +70,7 @@ while True:
         pygame.draw.rect(screen,color_dark,[width/2,height/2,140,40]) 
       
     # superimposing the text onto our button 
-    screen.blit(text , (width/2+50,height/2)) 
+    screen.blit(tela_de_fundo_img , (0,0)) 
       
     # updates the frames of the game 
     pygame.display.update() 
