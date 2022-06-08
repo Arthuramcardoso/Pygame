@@ -12,8 +12,8 @@ res=(1000,500)
   
 # opens up a window 
 screen = pygame.display.set_mode(res) 
-tela_de_fundo_img = pygame.image.load('Recursos/capamenu.jpeg').convert()
-tela_de_fundo_img = pygame.transform.scale(tela_de_fundo_img,(largura_da_tela, altura_da_tela))
+tela_de_fundo_menu_img = pygame.image.load('Recursos/capamenu.jpeg').convert()
+tela_de_fundo_menu_img = pygame.transform.scale(tela_de_fundo_img,(largura_da_tela, altura_da_tela))
   
 # white color 
 color = (255,255,255) 
@@ -70,7 +70,7 @@ while True:
         pygame.draw.rect(screen,color_dark,[width/2,height/2,140,40]) 
       
     # superimposing the text onto our button 
-    screen.blit(tela_de_fundo_img , (0,0)) 
+    screen.blit(tela_de_fundo_menu_img , (0,0)) 
       
     # updates the frames of the game 
     pygame.display.update() 
