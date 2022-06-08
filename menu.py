@@ -6,7 +6,7 @@ import sys
 pygame.init() 
   
 # screen resolution 
-res = (720,720) 
+res = (1000,500) 
   
 # opens up a window 
 screen = pygame.display.set_mode(res) 
@@ -33,7 +33,7 @@ smallfont = pygame.font.SysFont('Corbel',35)
   
 # rendering a text written in 
 # this font 
-text = smallfont.render('quit' , True , color) 
+text = smallfont.render('Jogar' , True , color) 
   
 while True: 
       
