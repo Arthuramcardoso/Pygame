@@ -64,6 +64,8 @@ largura_inicial_dos_obstaculos = 180
 velocidade_x_dos_obstaculos = 0
 velocidade_y_dos_obstaculos = 2
 
+pontos = 0
+
 tela_de_fundo_img = pygame.image.load('recursos/fundo.png').convert()
 tela_de_fundo_img = pygame.transform.scale(tela_de_fundo_img,(largura_da_tela, altura_da_tela))
 
@@ -124,9 +126,7 @@ class Obstaculo(pygame.sprite.Sprite):
         if self.rect.top > altura_da_tela:
             todosobstaculos.remove(self)
             sprites.remove(self)
-        #     #self.image = pygame.transform.scale(self.image,(largura_inicial_dos_obstaculos, altura_inicial_dos_obstaculos))
-        #     self.rect.x = self.posição[0]
-        #     self.rect.y = self.posição[1]
+
 
 class Personagem(pygame.sprite.Sprite):
     def __init__(self, img):
@@ -148,6 +148,11 @@ class Personagem(pygame.sprite.Sprite):
         if self.speedx != 0 and self.rect.x in self.xlist:
             self.speedx = 0
 
+#escreve pontuação na tela
+font = pygame.font.SysFont(None, 48)
+#text = font.render('{}'.format(pontos), True, (0, 0, 0))
+
+#inicia
 game = True
 
 
@@ -166,21 +171,6 @@ sprites = pygame.sprite.Group()
 personagem = Personagem(personagem_img)
 sprites.add(personagem)
 
-# carro_da_fgv = Obstaculo(carro_da_fgv_img, muito_esquerda, camadas[0])
-# carro_do_marcao = Obstaculo(carro_do_marcao_img, esquerda, camadas[1])
-# carro_da_espm = Obstaculo(carro_da_espm_img, meio, camadas[2])
-# carro_da_puc = Obstaculo(carro_da_puc_img, direita, camadas[3])
-# carro_do_mackenzie = Obstaculo(carro_do_mackenzie_img, muito_direita, camadas[4])
-# listaobstaculos = [carro_da_fgv,carro_do_marcao,carro_da_espm,carro_da_puc,carro_do_mackenzie]
-
-# for obstaculo in listaobstaculos:
-#     todosobstaculos.add(obstaculo)
-#     sprites.add(obstaculo)
-
-# lista_obstaculos_camada1 = cria_obstaculos(2, camadas[0])
-# lista_obstaculos_camada2 = cria_obstaculos(1, camadas[1])
-# lista_obstaculos_camada3 = cria_obstaculos(3, camadas[2])
-
 lista_lista_obstaculos = cria_todos_obstaculos(camadas)
 
 for lista in lista_lista_obstaculos:
@@ -192,14 +182,16 @@ for lista in lista_lista_obstaculos:
 while game:
     clock.tick(FPS)
     tempo_final = time.time()
+    pontos = tempo_final - tempo_inicial
 
     # ----- Trata eventos
     for event in pygame.event.get():
         # ----- Verifica consequências
         if event.type == pygame.QUIT:
             game = False
+        
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
+            if event.key == pygame.K_LEFT and personagem.speedx == 0:
                 if personagem.indice == 0:
                     personagem.indice = 0
                 else:
@@ -207,7 +199,7 @@ while game:
                     personagem.speedx = -20
                 
 
-            if event.key == pygame.K_RIGHT:
+            if event.key == pygame.K_RIGHT and personagem.speedx == 0:
                 if personagem.indice == 4:
                     personagem.indice = 4
                 else:
@@ -217,6 +209,7 @@ while game:
   
     # ----- Atualiza estado do jogo
     sprites.update()
+    
 
     # ----- Verifica Colisão
     hits = pygame.sprite.spritecollide(personagem, todosobstaculos, True)
@@ -226,9 +219,11 @@ while game:
     # ----- Gera saídas
     window.fill((255, 255, 255))  # Preenche com a cor branca
     window.blit(tela_de_fundo_img,(0,0))
+    text = font.render('{0:.0f}'.format(pontos), True, (0, 0, 0))
+    window.blit(text, (490, 0))
+
 
     sprites.draw(window)
-
     # ----- Atualiza estado do jogo
     pygame.display.update()  # Mostra o novo frame para o jogador
 
