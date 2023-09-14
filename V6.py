@@ -7,21 +7,18 @@ from pygame.locals import *
 from pygame import mixer
 
 pygame.init()
-# ----- Gera tela principal
+
+# ----- Gera tela
 altura_da_tela = 500
 largura_da_tela = 1000
 window = pygame.display.set_mode((largura_da_tela, altura_da_tela))
 pygame.display.set_caption('Jogo')
 
-
 # ----- Musica
 mixer.init()
 mixer.music.load('Recursos/zap zap.ogg')
 
-
 # ----- funções utilizadas no jogo
-
-
 def cria_camadas(n_camada_final):
     camadas = []
     for i in range(1, n_camada_final*5, 5):
@@ -29,19 +26,17 @@ def cria_camadas(n_camada_final):
     return camadas
 
 def cria_obstaculos(n_buracos, camada):
-    lista_obstaculo_criado = []
+    lista_obstaculos = []
     lista_indices = [0,1,2,3,4]
     for buraco in range(n_buracos):
         indice_sorteado = random.choice(lista_indices)
         lista_indices.remove(indice_sorteado)
-    for obstaculo in lista_indices:
+    for indice in lista_indices:
         imagem_sorteada = random.choice(lista_das_imagens)
-        posição = lista_posições[obstaculo]
-
-        oobstaculo = Obstaculo(imagem_sorteada, posição, camada)
-        lista_obstaculo_criado.append(oobstaculo)
-
-    return lista_obstaculo_criado
+        posicao = lista_posições[indice]
+        oobstaculo = Obstaculo(imagem_sorteada, posicao, camada)
+        lista_obstaculos.append(oobstaculo)
+    return lista_obstaculos
 
 def cria_todos_obstaculos(camadas):
     lista = []
@@ -50,20 +45,17 @@ def cria_todos_obstaculos(camadas):
         lista.append(cria_obstaculos(random.choice(numeros_de_buracos), i))
     return lista
 
-
-
 # ----- definição tamanhos e propriedades das estruturas
+pontos = 0
 
 largura_do_personagem = 180
 altura_do_personagem = 120
 
-altura_inicial_dos_obstaculos = 120
 largura_inicial_dos_obstaculos = 180
+altura_inicial_dos_obstaculos = 120
 
 velocidade_x_dos_obstaculos = 0
 velocidade_y_dos_obstaculos = 2
-
-pontos = 0
 
 tela_de_fundo_img = pygame.image.load('recursos/fundo.png').convert()
 tela_de_fundo_img = pygame.transform.scale(tela_de_fundo_img,(largura_da_tela, altura_da_tela))
@@ -97,47 +89,33 @@ perdeu_img = pygame.transform.scale(perdeu_img,(largura_da_tela, altura_da_tela)
 
 lista_das_imagens = [carro_da_fgv_img, carro_do_marcao_img, carro_da_espm_img, carro_da_puc_img, carro_do_mackenzie_img]
 
-# ----- Posições e velocidades iniciais
-muito_esquerda = [0, -altura_inicial_dos_obstaculos, velocidade_x_dos_obstaculos, velocidade_y_dos_obstaculos]
-esquerda = [200, -altura_inicial_dos_obstaculos, velocidade_x_dos_obstaculos, velocidade_y_dos_obstaculos]
-meio = [400, -altura_inicial_dos_obstaculos, velocidade_x_dos_obstaculos, velocidade_y_dos_obstaculos]
-direita = [600, -altura_inicial_dos_obstaculos, velocidade_x_dos_obstaculos, velocidade_y_dos_obstaculos]
-muito_direita = [800, -altura_inicial_dos_obstaculos, velocidade_x_dos_obstaculos, velocidade_y_dos_obstaculos]
-
-lista_posições = [muito_esquerda, esquerda, meio, direita, muito_direita]
+# ----- Posições
+lista_posições = [0, 200, 400, 600, 800] # referentes respectivamente a posição muito a esquerda, a esquerda, no meio, a direita e muito a direita
 
 camadas = cria_camadas(60)
 
 # ----- Inicia estruturas de dados
-# definindo os novos tipos de estruturas
-
-
-aumento_da_velocidade = 0
-
 class Obstaculo(pygame.sprite.Sprite):
-    def __init__(self, img, posição, camada):
+    def __init__(self, img, posicao, camada):
         pygame.sprite.Sprite.__init__(self)
 
-        #self.velocidade = aumento_da_velocidade
         self.image = img
         self.rect = self.image.get_rect()
-        self.posição = posição
-        self.rect.x = posição[0]
+        self.rect.x = posicao
         self.rect.y = camada
-        self.speedx = posição[2]
-        self.speedy = posição[3]
+        self.speedx = velocidade_x_dos_obstaculos
+        self.speedy = velocidade_y_dos_obstaculos
 
     def update (self):
         #atualizando posição do obstaculo
         self.rect.x += self.speedx
-        acelaracao = int(self.speedy*((tempo_passado))*0.15)
+        acelaracao = int(self.speedy*((tempo_passado))*0.1)
         self.rect.y += 2 + acelaracao
 
         #reiniciando posição
         if self.rect.top > altura_da_tela:
             todosobstaculos.remove(self)
             sprites.remove(self)
-
 
 class Personagem(pygame.sprite.Sprite):
     def __init__(self, img):
@@ -161,19 +139,15 @@ class Personagem(pygame.sprite.Sprite):
 
 #escreve pontuação na tela
 font = pygame.font.SysFont(None, 48)
-#text = font.render('{}'.format(pontos), True, (0, 0, 0))
 
 #inicia
 game = True
 
-
 # ----- Ajuste de velocidade
-
 tempo_inicial = time.time()
 
 clock = pygame.time.Clock()
-FPS = 0.5
-
+FPS = 60
 
 # ----- Criando obstaculos
 todosobstaculos = pygame.sprite.Group()
@@ -234,13 +208,10 @@ while game:
     # ----- Atualiza estado do jogo
     sprites.update()
 
-    
-
     # ----- Verifica Colisão
     hits = pygame.sprite.spritecollide(personagem, todosobstaculos, True)
     if len(hits) > 0:
         estado = 'perdeu'
-    #    game = False
 
     # ----- Gera saídas
     window.fill((255, 255, 255))  # Preenche com a cor branca
@@ -259,7 +230,6 @@ while game:
     elif estado == 'perdeu':
         window.blit(perdeu_img, (0,0))
         mixer.music.stop()
-
 
     # ----- Atualiza estado do jogo
     pygame.display.update()  # Mostra o novo frame para o jogador
