@@ -57,6 +57,8 @@ altura_inicial_dos_obstaculos = 120
 velocidade_x_dos_obstaculos = 0
 velocidade_y_dos_obstaculos = 2
 
+acelerador = 0.1
+
 tela_de_fundo_img = pygame.image.load('recursos/fundo.png').convert()
 tela_de_fundo_img = pygame.transform.scale(tela_de_fundo_img,(largura_da_tela, altura_da_tela))
 
@@ -89,6 +91,12 @@ perdeu_img = pygame.transform.scale(perdeu_img,(largura_da_tela, altura_da_tela)
 
 lista_das_imagens = [carro_da_fgv_img, carro_do_marcao_img, carro_da_espm_img, carro_da_puc_img, carro_do_mackenzie_img]
 
+lista_indices = [0,1,2,3,4]
+indice_esquerda = lista_indices[0]
+indice_direita = lista_indices[-1]
+
+vx = 20
+
 # ----- Posições
 lista_posições = [0, 200, 400, 600, 800] # referentes respectivamente a posição muito a esquerda, a esquerda, no meio, a direita e muito a direita
 
@@ -109,7 +117,7 @@ class Obstaculo(pygame.sprite.Sprite):
     def update (self):
         #atualizando posição do obstaculo
         self.rect.x += self.speedx
-        acelaracao = int(self.speedy*((tempo_passado))*0.1)
+        acelaracao = int(self.speedy*((tempo_passado))*acelerador)
         self.rect.y += 2 + acelaracao
 
         #reiniciando posição
@@ -138,7 +146,8 @@ class Personagem(pygame.sprite.Sprite):
             self.speedx = 0
 
 #escreve pontuação na tela
-font = pygame.font.SysFont(None, 48)
+tamanho_da_font = 48
+font = pygame.font.SysFont(None, tamanho_da_font)
 
 #inicia
 game = True
@@ -185,23 +194,23 @@ while game:
                     estado = 'jogo'
                     tempo_inicial = time.time()
                     mixer.music.play()
-                    FPS = 60
+                    FPS = FPS
         
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT and personagem.speedx <= 2 and estado == 'jogo':
-                if personagem.indice == 0:
-                    personagem.indice = 0
+                if personagem.indice == indice_esquerda:
+                    personagem.indice = indice_esquerda
                 else:
                     personagem.indice -= 1
-                    personagem.speedx = -20
+                    personagem.speedx = -vx
                 
 
             if event.key == pygame.K_RIGHT and personagem.speedx == 0 and estado == 'jogo':
-                if personagem.indice == 4:
-                    personagem.indice = 4
+                if personagem.indice == indice_direita:
+                    personagem.indice = indice_direita
                 else:
                     personagem.indice += 1
-                    personagem.speedx = 20
+                    personagem.speedx = vx
             
     if pontos >= 61:
         estado = 'ganhou'
